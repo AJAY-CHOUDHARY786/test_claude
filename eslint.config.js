@@ -1,7 +1,7 @@
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["build/**", ".react-router/**", "node_modules/**", "extensions/**", "public/**"] },
+  { ignores: ["build/**", ".react-router/**", ".shopify/**", "node_modules/**", "extensions/**", "public/**"] },
   ...tseslint.configs.recommended,
   {
     rules: {

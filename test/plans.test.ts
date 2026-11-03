@@ -9,10 +9,10 @@ const now = new Date("2026-06-15T00:00:00Z");
 const sub = (plan: "basic" | "advanced" | null, status: any = "ACTIVE", trialEndsAt: Date | null = null) => ({ plan, status, trialEndsAt });
 
 test("catalog matches the approved pricing", () => {
-  assert.equal(PLAN_CATALOG.basic.priceUsdMonthly, 9);
+  assert.equal(PLAN_CATALOG.basic.priceUsdMonthly, 5);
   assert.equal(PLAN_CATALOG.advanced.priceUsdMonthly, 15);
-  assert.equal(PLAN_CATALOG.basic.trialDays, 30);
-  assert.equal(PLAN_CATALOG.advanced.trialDays, 30);
+  assert.equal(PLAN_CATALOG.basic.trialDays, 7);
+  assert.equal(PLAN_CATALOG.advanced.trialDays, 7);
 });
 
 test("Basic merchants get every basic feature and no advanced feature", () => {

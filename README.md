@@ -1,7 +1,7 @@
 # Product Reviews: Shopify review app (PERN stack)
 
 A public, multi-merchant Shopify app for product reviews: collection, moderation, storefront widgets,
-review request emails, CSV import/export, analytics, and Basic ($9) and Advanced ($15) plans with a 30-day trial.
+review request emails, CSV import/export, analytics, and Basic ($5) and Advanced ($15) plans with a 7-day trial.
 
 **Stack:** PostgreSQL (Prisma) · Express · React (React Router, Polaris web components) · Node.js 22. TypeScript throughout.
 No Python and no other runtime is needed.

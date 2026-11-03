@@ -2,9 +2,9 @@
 
 Source of truth: `app/lib/plans.ts`. The server checks these on every route, action, storefront endpoint and background job.
 
-| Feature | Basic $9 | Advanced $15 |
+| Feature | Basic $5 | Advanced $15 |
 |---|:-:|:-:|
-| 30-day free trial | Yes | Yes |
+| 7-day free trial | Yes | Yes |
 | Review management (list, search, filter, edit, delete) | Yes | Yes |
 | Approve / reject / hide reviews, merchant replies | Yes | Yes |
 | Show reviews on the store (standard widgets, star rating block) | Yes | Yes |

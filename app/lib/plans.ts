@@ -25,8 +25,8 @@ export interface PlanDefinition {
 }
 
 export const PLAN_CATALOG: Record<PlanId, PlanDefinition> = {
-  basic: { id: "basic", name: "Basic", priceUsdMonthly: 9, trialDays: 30, features: [...BASIC_FEATURES] },
-  advanced: { id: "advanced", name: "Advanced", priceUsdMonthly: 15, trialDays: 30, features: [...BASIC_FEATURES, ...ADVANCED_ONLY_FEATURES] },
+  basic: { id: "basic", name: "Basic", priceUsdMonthly: 5, trialDays: 7, features: [...BASIC_FEATURES] },
+  advanced: { id: "advanced", name: "Advanced", priceUsdMonthly: 15, trialDays: 7, features: [...BASIC_FEATURES, ...ADVANCED_ONLY_FEATURES] },
 };
 
 export interface SubscriptionState {
