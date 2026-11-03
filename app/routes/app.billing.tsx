@@ -9,7 +9,7 @@ import { Notice, fmtDate } from "../components/ui.tsx";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { shop, ent } = await requireMerchant(request);
   const sub = await prisma.subscription.findUnique({ where: { shopId: shop.id } });
-  return { ent: { active: ent.active, plan: ent.plan, inTrial: ent.inTrial }, sub: sub ? { status: sub.status, trialEndsAt: sub.trialEndsAt, test: sub.isTest, periodEnd: sub.currentPeriodEnd } : null, url: planSelectionUrl(shop.domain), plans: Object.values(PLAN_CATALOG).map((p) => ({ id: p.id, name: p.name, price: p.priceUsdMonthly, trial: p.trialDays, features: p.features as readonly string[] })) };
+  return { ent: { active: ent.active, plan: ent.plan, inTrial: ent.inTrial, trialEndsAt: ent.trialEndsAt }, sub: sub ? { status: sub.status, trialEndsAt: sub.trialEndsAt, test: sub.isTest, periodEnd: sub.currentPeriodEnd } : null, url: planSelectionUrl(shop.domain), plans: Object.values(PLAN_CATALOG).map((p) => ({ id: p.id, name: p.name, price: p.priceUsdMonthly, trial: p.trialDays, features: p.features as readonly string[] })) };
 };
 
 // Billing is handled on Shopify's own pricing page. This only re-reads the truth from Shopify.
@@ -29,7 +29,7 @@ export default function Billing() {
       <Notice data={result} />
       <s-section heading="Your plan">
         {d.ent.active ? (
-          <s-paragraph>You are on the <strong>{d.ent.plan === "advanced" ? "Advanced" : "Basic"}</strong> plan{d.ent.inTrial && d.sub?.trialEndsAt ? `, in your free trial until ${fmtDate(d.sub.trialEndsAt)}` : ""}.{d.sub?.test ? " This is a test subscription and is not charged." : ""}</s-paragraph>
+          <s-paragraph>{d.ent.plan ? <>You are on the <strong>{d.ent.plan === "advanced" ? "Advanced" : "Basic"}</strong> plan</> : "You are in the full-access app trial"}{d.ent.inTrial && d.ent.trialEndsAt ? ` until ${fmtDate(d.ent.trialEndsAt)}` : ""}.{d.sub?.test ? " This is a test subscription and is not charged." : ""}</s-paragraph>
         ) : (
           <s-paragraph>You do not have an active plan{d.sub && d.sub.status !== "NONE" ? ` (status: ${d.sub.status.toLowerCase()})` : ""}. Your published reviews still show on your store and you can export your data, but management features are paused.</s-paragraph>
         )}
@@ -37,7 +37,7 @@ export default function Billing() {
           {d.url ? <a className="pr-btn primary" href={d.url} target="_top">{d.ent.active ? "Change or cancel plan" : "Choose a plan"}</a> : <s-banner tone="warning">The plan page link needs SHOPIFY_APP_HANDLE to be set on the server.</s-banner>}
           <Form method="post"><button className="pr-btn" disabled={busy}>Refresh status</button></Form>
         </div>
-        <s-paragraph>Plans, free trials and charges are handled by Shopify. Both plans include a {d.plans[0]?.trial}-day free trial. A store that reinstalls the app does not get a fresh trial.</s-paragraph>
+        <s-paragraph>The app includes {d.plans[0]?.trial} days of full access from installation. To continue after that, choose and approve a Shopify plan. Shopify also applies the plan's configured free trial after approval; reinstalling the app does not restart the app trial.</s-paragraph>
       </s-section>
       <s-section heading="Compare plans">
         <div className="pr-table-wrap"><table className="pr-table">

@@ -4,7 +4,7 @@ Source of truth: `app/lib/plans.ts`. The server checks these on every route, act
 
 | Feature | Basic $5 | Advanced $15 |
 |---|:-:|:-:|
-| 7-day free trial | Yes | Yes |
+| Full-access app trial for 7 days after install | Yes | Yes |
 | Review management (list, search, filter, edit, delete) | Yes | Yes |
 | Approve / reject / hide reviews, merchant replies | Yes | Yes |
 | Show reviews on the store (standard widgets, star rating block) | Yes | Yes |

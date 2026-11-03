@@ -3,7 +3,7 @@
 **Before first run**
 - [ ] Shopify Partner / Dev Dashboard account and a development store
 - [ ] PostgreSQL database URL (in `.env`, never in chat)
-- [ ] Plans created in Partner Dashboard: `Basic` $5 and `Advanced` $15, each with a 7-day trial (names must match exactly)
+- [ ] Plans created in Partner Dashboard: `Basic` $5 and `Advanced` $15, with the intended plan trial configured (names must match exactly). The app separately gives full access for 7 days after initial install.
 - [ ] `npm run db:init` and commit the migration
 - [ ] Decide the real app name (change `app/lib/brand.ts`, `name` in `shopify.app.toml`)
 

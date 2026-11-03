@@ -22,11 +22,14 @@ export async function syncSubscription(admin: { graphql: Graphql }, shopId: stri
 }
 
 export async function getEntitlements(shopId: string, now = new Date()) {
-  const row = await prisma.subscription.findUnique({ where: { shopId } });
+  const [row, shop] = await Promise.all([
+    prisma.subscription.findUnique({ where: { shopId } }),
+    prisma.shop.findUnique({ where: { id: shopId }, select: { installedAt: true } }),
+  ]);
   const state: SubscriptionState | null = row
     ? { plan: (row.plan as SubscriptionState["plan"]) ?? null, status: row.status as SubscriptionStatus, trialEndsAt: row.trialEndsAt }
     : null;
-  return resolveEntitlements(state, now);
+  return resolveEntitlements(state, now, shop?.installedAt ?? null);
 }
 
 export function planSelectionUrl(shopDomain: string): string | null {

@@ -8,7 +8,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { shop, ent } = await requireMerchant(request);
   const stats = await dashboardStats(shop.id);
   return {
-    stats, active: ent.active, plan: ent.plan, inTrial: ent.inTrial,
+    stats, active: ent.active, plan: ent.plan, inTrial: ent.inTrial, trialEndsAt: ent.trialEndsAt,
     requestsEnabled: shop.settings?.requestsEnabled ?? false, canRequest: hasFeature(ent, "requests.basic"),
     photosReady: Boolean(await getStorage()),
   };
@@ -22,11 +22,11 @@ export default function Dashboard() {
     <s-page heading="Dashboard">
       {!d.active && (
         <s-banner tone="warning" heading="Choose a plan to start collecting reviews">
-          <s-paragraph>Both plans include a 30-day free trial. Reviews that are already published stay visible on your store.</s-paragraph>
+          <s-paragraph>Start with 7 days of full access. Choose and approve a Shopify plan to continue after the trial. Published reviews stay visible on your store.</s-paragraph>
           <s-button slot="secondary-actions" href="/app/billing">Choose a plan</s-button>
         </s-banner>
       )}
-      {d.inTrial && <s-banner tone="info">You are on a free trial of the {d.plan === "advanced" ? "Advanced" : "Basic"} plan.</s-banner>}
+      {d.inTrial && <s-banner tone="info">You have full access until {d.trialEndsAt ? new Date(d.trialEndsAt).toLocaleDateString() : "your trial ends"}{d.plan ? ` on the ${d.plan === "advanced" ? "Advanced" : "Basic"} plan` : ""}. Choose and approve a Shopify plan to continue afterward.</s-banner>}
       {pending > 0 && (
         <s-banner tone="warning" heading={`${pending} review${pending > 1 ? "s" : ""} waiting for approval`}>
           <s-button slot="secondary-actions" href="/app/reviews?status=PENDING">Review them</s-button>

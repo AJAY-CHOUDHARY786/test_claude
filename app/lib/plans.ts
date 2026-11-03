@@ -29,6 +29,9 @@ export const PLAN_CATALOG: Record<PlanId, PlanDefinition> = {
   advanced: { id: "advanced", name: "Advanced", priceUsdMonthly: 15, trialDays: 7, features: [...BASIC_FEATURES, ...ADVANCED_ONLY_FEATURES] },
 };
 
+export const APP_TRIAL_DAYS = 7;
+export const APP_TRIAL_FEATURES = [...BASIC_FEATURES, ...ADVANCED_ONLY_FEATURES] as const;
+
 export interface SubscriptionState {
   plan: PlanId | null;
   status: SubscriptionStatus | null;
@@ -39,17 +42,22 @@ export interface Entitlements {
   active: boolean;
   plan: PlanId | null;
   inTrial: boolean;
+  trialEndsAt: Date | null;
   features: ReadonlySet<Feature>;
 }
 
-export function resolveEntitlements(sub: SubscriptionState | null, now: Date): Entitlements {
+export function resolveEntitlements(sub: SubscriptionState | null, now: Date, installedAt: Date | null = null): Entitlements {
+  const appTrialEndsAt = installedAt ? new Date(installedAt.getTime() + APP_TRIAL_DAYS * 86_400_000) : null;
+  if (appTrialEndsAt && appTrialEndsAt.getTime() > now.getTime()) {
+    return { active: true, plan: sub?.plan ?? null, inTrial: true, trialEndsAt: appTrialEndsAt, features: new Set<Feature>(APP_TRIAL_FEATURES) };
+  }
   if (!sub || !sub.plan || sub.status !== "ACTIVE") {
-    return { active: false, plan: null, inTrial: false, features: new Set<Feature>(INACTIVE_FEATURES) };
+    return { active: false, plan: null, inTrial: false, trialEndsAt: null, features: new Set<Feature>(INACTIVE_FEATURES) };
   }
   const def = PLAN_CATALOG[sub.plan];
-  if (!def) return { active: false, plan: null, inTrial: false, features: new Set<Feature>(INACTIVE_FEATURES) };
+  if (!def) return { active: false, plan: null, inTrial: false, trialEndsAt: null, features: new Set<Feature>(INACTIVE_FEATURES) };
   const inTrial = sub.trialEndsAt !== null && sub.trialEndsAt.getTime() > now.getTime();
-  return { active: true, plan: sub.plan, inTrial, features: new Set<Feature>(def.features) };
+  return { active: true, plan: sub.plan, inTrial, trialEndsAt: inTrial ? sub.trialEndsAt : null, features: new Set<Feature>(def.features) };
 }
 
 export function hasFeature(ent: Entitlements, feature: Feature): boolean {

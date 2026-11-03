@@ -42,6 +42,26 @@ test("non-active or missing subscriptions lose paid features but keep storefront
   assert.equal(resolveEntitlements(sub(null), now).active, false);
 });
 
+test("the seven-day install trial grants every feature, then requires an approved plan", () => {
+  const installedAt = new Date("2026-06-15T00:00:00Z");
+  const duringTrial = resolveEntitlements(null, new Date("2026-06-21T23:59:59Z"), installedAt);
+  assert.equal(duringTrial.active, true);
+  assert.equal(duringTrial.plan, null);
+  assert.equal(duringTrial.inTrial, true);
+  assert.equal(duringTrial.trialEndsAt?.toISOString(), "2026-06-22T00:00:00.000Z");
+  for (const feature of [...BASIC_FEATURES, ...ADVANCED_ONLY_FEATURES]) assert.ok(hasFeature(duringTrial, feature), feature);
+
+  const afterTrial = resolveEntitlements(null, new Date("2026-06-22T00:00:00Z"), installedAt);
+  assert.equal(afterTrial.active, false);
+  assert.equal(afterTrial.inTrial, false);
+  assert.ok(!hasFeature(afterTrial, "reviews.manage"));
+
+  const approvedBasic = resolveEntitlements(sub("basic"), new Date("2026-06-23T00:00:00Z"), installedAt);
+  assert.equal(approvedBasic.active, true);
+  assert.ok(hasFeature(approvedBasic, "reviews.manage"));
+  assert.ok(!hasFeature(approvedBasic, "analytics.advanced"));
+});
+
 test("an unknown plan value from the database grants nothing", () => {
   const ent = resolveEntitlements({ plan: "enterprise" as any, status: "ACTIVE", trialEndsAt: null }, now);
   assert.equal(ent.active, false);
