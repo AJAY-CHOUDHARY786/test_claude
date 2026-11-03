@@ -3,6 +3,7 @@ node_modules/
 build/
 dist/
 .react-router/
+.vercel/
 coverage/
 
 # Secrets and local config. Never commit these.
@@ -29,3 +30,5 @@ npm-debug.log*
 
 # Phase gate reports
 phase*-report.txt
+.vercel
+.env*

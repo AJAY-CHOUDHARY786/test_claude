@@ -1,7 +1,7 @@
-# Placeholders only. `shopify app config link` fills in client_id; `shopify app dev` manages URLs in development.
-client_id = ""
+# `client_id` is the Shopify app's public API key.
+client_id = "be03372af3379cb3141dcc0407588c32"
 name = "Product Reviews"
-application_url = "https://example.com"
+application_url = "https://testclaude-e4k2.vercel.app"
 embedded = true
 
 [build]
@@ -37,11 +37,11 @@ scopes = "read_orders,read_products"
 use_legacy_install_flow = false
 
 [auth]
-redirect_urls = ["https://example.com/api/auth"]
+redirect_urls = ["https://testclaude-e4k2.vercel.app/auth/callback"]
 
 # Storefront widgets call https://<store>/apps/reviews/... which Shopify forwards (signed) to /proxy/...
 [app_proxy]
-url = "https://example.com/proxy"
+url = "https://testclaude-e4k2.vercel.app/proxy"
 subpath = "reviews"
 prefix = "apps"
 
