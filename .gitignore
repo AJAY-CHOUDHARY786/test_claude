@@ -1,0 +1,31 @@
+# Dependencies and builds
+node_modules/
+build/
+dist/
+.react-router/
+coverage/
+
+# Secrets and local config. Never commit these.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Local databases
+*.sqlite
+*.sqlite-journal
+dev.sqlite
+
+# Shopify CLI local state
+.shopify/
+
+# Logs and OS files
+*.log
+npm-debug.log*
+.DS_Store
+.idea/
+
+# Phase gate reports
+phase*-report.txt

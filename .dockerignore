@@ -1,0 +1,10 @@
+node_modules
+build
+.git
+.env
+.env.*
+!.env.example
+.react-router
+*.log
+docs
+test

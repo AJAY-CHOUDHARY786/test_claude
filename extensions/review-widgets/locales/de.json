@@ -1,0 +1,11 @@
+{ "reviews": {
+  "heading": "Kundenbewertungen", "noscript": "Bewertungen benötigen JavaScript, um angezeigt zu werden.", "loading": "Bewertungen werden geladen…",
+  "none": "Noch keine Bewertungen. Schreiben Sie die erste.", "based_on": "Basierend auf {count} Bewertungen", "based_on_one": "Basierend auf 1 Bewertung",
+  "out_of": "von 5", "verified": "Verifizierter Kauf", "store_reply": "Antwort des Shops", "write": "Bewertung schreiben", "cancel": "Abbrechen",
+  "sort": "Sortieren nach", "newest": "Neueste", "highest": "Beste Bewertung", "lowest": "Schlechteste Bewertung", "all_ratings": "Alle Bewertungen",
+  "load_more": "Weitere Bewertungen anzeigen", "your_rating": "Ihre Bewertung", "headline": "Überschrift (optional)", "your_review": "Ihre Bewertung", "your_name": "Angezeigter Name",
+  "photos": "Fotos hinzufügen (optional, bis zu 5)", "submit": "Bewertung senden", "sending": "Wird gesendet…",
+  "thanks_pending": "Danke. Ihre Bewertung erscheint, sobald der Shop sie freigegeben hat.", "thanks_published": "Danke. Ihre Bewertung ist jetzt veröffentlicht.",
+  "error_generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.", "error_rate": "Sie haben kürzlich mehrere Bewertungen gesendet. Bitte versuchen Sie es später erneut.",
+  "photo_failed": "Ihre Bewertung wurde gespeichert, aber ein Foto konnte nicht hochgeladen werden.", "questions": "Fragen und Antworten", "ask": "Frage stellen",
+  "your_question": "Ihre Frage", "thanks_question": "Danke. Der Shop beantwortet Ihre Frage und veröffentlicht sie hier.", "stars": "{n} von 5 Sternen" } }

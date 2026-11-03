@@ -1,0 +1,21 @@
+:root { --ink: #1c1b19; --muted: #5d5a54; --line: #d9d4ca; --accent: #1f4b3f; --bg: #faf8f4; }
+@media (prefers-color-scheme: dark) { :root { --ink: #f1eee8; --muted: #b4afa5; --line: #3a3833; --accent: #7fc4ac; --bg: #181715; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.page { max-width: 560px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+h1 { font-size: 1.6rem; line-height: 1.25; margin: 0 0 .5rem; }
+p.lead { color: var(--muted); margin: 0 0 1.5rem; }
+label, legend { display: block; font-weight: 600; margin: 1.1rem 0 .35rem; padding: 0; }
+input[type=text], textarea { width: 100%; padding: .65rem .75rem; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: inherit; font: inherit; }
+textarea { min-height: 8rem; resize: vertical; }
+:is(input, textarea, button, a):focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+fieldset { border: 0; margin: 0; padding: 0; }
+.stars { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: .15rem; }
+.stars input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.stars label { font-size: 2.1rem; line-height: 1; margin: 0; cursor: pointer; color: var(--line); font-weight: 400; }
+.stars input:checked ~ label, .stars label:hover, .stars label:hover ~ label { color: var(--accent); }
+.stars input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+button.primary { margin-top: 1.5rem; padding: .75rem 1.4rem; border: 0; border-radius: 6px; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+.error { color: #b3261e; font-size: .92rem; margin: .3rem 0 0; }
+.notice { padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 8px; }
+.hp { position: absolute; left: -9999px; height: 0; overflow: hidden; }

@@ -1,0 +1,49 @@
+# Placeholders only. `shopify app config link` fills in client_id; `shopify app dev` manages URLs in development.
+client_id = ""
+name = "Product Reviews"
+application_url = "https://example.com"
+embedded = true
+
+[build]
+include_config_on_deploy = true
+
+[webhooks]
+api_version = "2026-07"
+
+  [[webhooks.subscriptions]]
+  topics = ["app/uninstalled"]
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = ["orders/fulfilled"]
+  uri = "/webhooks/orders/fulfilled"
+
+  [[webhooks.subscriptions]]
+  topics = ["orders/cancelled"]
+  uri = "/webhooks/orders/cancelled"
+
+  [[webhooks.subscriptions]]
+  topics = ["app_subscriptions/update"]
+  uri = "/webhooks/app_subscriptions/update"
+
+  # Mandatory privacy webhooks required for App Store apps.
+  [[webhooks.subscriptions]]
+  compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
+  uri = "/webhooks/compliance"
+
+[access_scopes]
+# Least privilege: orders (to schedule review requests) and products (to show product names).
+scopes = "read_orders,read_products"
+use_legacy_install_flow = false
+
+[auth]
+redirect_urls = ["https://example.com/api/auth"]
+
+# Storefront widgets call https://<store>/apps/reviews/... which Shopify forwards (signed) to /proxy/...
+[app_proxy]
+url = "https://example.com/proxy"
+subpath = "reviews"
+prefix = "apps"
+
+[pos]
+embedded = false

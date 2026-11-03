@@ -1,0 +1,13 @@
+<a class="prw-mini" href="#prw" data-prw-mini data-product-id="{{ product.id }}" data-endpoint="/apps/reviews" hidden></a>
+<script type="application/json" data-prw-strings>
+{ "stars": {{ 'reviews.stars' | t | json }}, "based_on": {{ 'reviews.based_on' | t | json }}, "based_on_one": {{ 'reviews.based_on_one' | t | json }} }
+</script>
+{% schema %}
+{
+  "name": "Star rating",
+  "target": "section",
+  "stylesheet": "reviews.css",
+  "javascript": "reviews.js",
+  "settings": []
+}
+{% endschema %}

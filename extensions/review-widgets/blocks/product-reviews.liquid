@@ -1,0 +1,26 @@
+{%- comment -%}Review widget for product pages. All content is loaded from the app and rendered with textContent.{%- endcomment -%}
+<div class="prw" data-prw data-product-id="{{ product.id }}" data-endpoint="/apps/reviews" data-heading="{{ block.settings.heading | escape }}" data-show-form="{{ block.settings.show_form }}" data-show-questions="{{ block.settings.show_questions }}" id="prw-{{ block.id }}">
+  <noscript>{{ 'reviews.noscript' | t }}</noscript>
+</div>
+<script type="application/json" data-prw-strings>
+{
+  {%- assign keys = 'none,based_on,based_on_one,out_of,verified,store_reply,write,cancel,sort,newest,highest,lowest,all_ratings,load_more,your_rating,headline,your_review,your_name,photos,submit,sending,thanks_pending,thanks_published,error_generic,error_rate,photo_failed,questions,ask,your_question,thanks_question,stars,loading' | split: ',' -%}
+  {%- for key in keys -%}
+  {%- assign path = 'reviews.' | append: key -%}
+  {{ key | json }}: {{ path | t | json }}{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+}
+</script>
+{% schema %}
+{
+  "name": "Product reviews",
+  "target": "section",
+  "stylesheet": "reviews.css",
+  "javascript": "reviews.js",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Customer reviews" },
+    { "type": "checkbox", "id": "show_form", "label": "Let shoppers write reviews", "default": true },
+    { "type": "checkbox", "id": "show_questions", "label": "Show questions and answers", "default": true }
+  ]
+}
+{% endschema %}

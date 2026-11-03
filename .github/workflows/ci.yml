@@ -1,0 +1,43 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: ci_only_password, POSTGRES_DB: reviews_test } # secret-scan:ignore throwaway CI database
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:ci_only_password@localhost:5432/reviews_test # secret-scan:ignore throwaway CI database
+      DATABASE_URL_TEST: postgresql://postgres:ci_only_password@localhost:5432/reviews_test # secret-scan:ignore throwaway CI database
+      SHOPIFY_API_KEY: ci-placeholder
+      SHOPIFY_API_SECRET: ci-placeholder-secret # secret-scan:ignore fake CI value
+      SCOPES: read_products,read_orders
+      SHOPIFY_APP_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npm run db:validate
+      - run: npm run check:schema
+      - run: npm run check:tenant
+      - run: npm run test
+      - name: Create tables and database rules on the throwaway CI database
+        run: npx prisma db push --skip-generate && npm run db:constraints
+      - name: Database tests (tenant isolation, uniqueness, cascade, constraints)
+        run: npm run test:db
+      - run: npm run check:secrets
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run audit:deps
+        continue-on-error: true   # advisory until you decide your policy
+      - name: Browser tests for the storefront widget
+        run: npx playwright install --with-deps chromium && npm run test:widget

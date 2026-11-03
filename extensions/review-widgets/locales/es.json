@@ -1,0 +1,11 @@
+{ "reviews": {
+  "heading": "Opiniones de clientes", "noscript": "Las opiniones necesitan JavaScript para mostrarse.", "loading": "Cargando opiniones…",
+  "none": "Aún no hay opiniones. Sé el primero en escribir una.", "based_on": "Basado en {count} opiniones", "based_on_one": "Basado en 1 opinión",
+  "out_of": "de 5", "verified": "Compra verificada", "store_reply": "Respuesta de la tienda", "write": "Escribir una opinión", "cancel": "Cancelar",
+  "sort": "Ordenar por", "newest": "Más recientes", "highest": "Mejor valoradas", "lowest": "Peor valoradas", "all_ratings": "Todas las valoraciones",
+  "load_more": "Mostrar más opiniones", "your_rating": "Tu valoración", "headline": "Título (opcional)", "your_review": "Tu opinión", "your_name": "Nombre a mostrar",
+  "photos": "Añadir fotos (opcional, hasta 5)", "submit": "Enviar opinión", "sending": "Enviando…",
+  "thanks_pending": "Gracias. Tu opinión aparecerá cuando la tienda la apruebe.", "thanks_published": "Gracias. Tu opinión ya está publicada.",
+  "error_generic": "Algo salió mal. Inténtalo de nuevo.", "error_rate": "Has enviado varias opiniones recientemente. Inténtalo más tarde.",
+  "photo_failed": "Tu opinión se guardó, pero no se pudo subir una foto.", "questions": "Preguntas y respuestas", "ask": "Hacer una pregunta",
+  "your_question": "Tu pregunta", "thanks_question": "Gracias. La tienda responderá y publicará tu pregunta aquí.", "stars": "{n} de 5 estrellas" } }

@@ -1,0 +1,46 @@
+.prw { --prw-accent: #1f4b3f; --prw-line: color-mix(in srgb, currentColor 22%, transparent); font: inherit; color: inherit; margin: 2rem 0; }
+.prw *, .prw-mini * { box-sizing: border-box; }
+.prw h2 { font-size: 1.4em; margin: 0 0 1rem; }
+.prw h3, .prw h4 { font-size: 1em; margin: 0; }
+.prw-summary { display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem; align-items: center; padding-bottom: 1.25rem; border-bottom: 1px solid var(--prw-line); }
+.prw-score { font-size: 2.6em; line-height: 1; font-variant-numeric: tabular-nums; }
+.prw-stars { color: var(--prw-accent); letter-spacing: .08em; white-space: nowrap; }
+.prw-dist { display: grid; grid-template-columns: auto 1fr auto; gap: .5rem; align-items: center; min-width: min(100%, 15rem); }
+.prw-dist button { all: unset; display: contents; cursor: pointer; }
+.prw-dist button:focus-visible span:first-child { outline: 2px solid var(--prw-accent); outline-offset: 2px; }
+.prw-bar { height: .55rem; background: var(--prw-line); border-radius: 99px; overflow: hidden; }
+.prw-bar i { display: block; height: 100%; background: var(--prw-accent); }
+.prw-controls { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin: 1rem 0; }
+.prw :is(select, input[type=text], textarea) { font: inherit; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: 4px; padding: .5rem .6rem; max-width: 100%; }
+.prw textarea { width: 100%; min-height: 7rem; }
+.prw input[type=text] { width: 100%; max-width: 26rem; }
+.prw-btn { font: inherit; padding: .6rem 1.1rem; border: 1px solid var(--prw-accent); background: var(--prw-accent); color: #fff; border-radius: 4px; cursor: pointer; }
+.prw-btn.ghost { background: transparent; color: inherit; border-color: currentColor; }
+.prw-btn[disabled] { opacity: .6; cursor: progress; }
+.prw :is(button, a, select, input, textarea):focus-visible, .prw-mini:focus-visible { outline: 2px solid var(--prw-accent); outline-offset: 2px; }
+.prw-list { list-style: none; margin: 0; padding: 0; }
+.prw[data-layout="grid"] .prw-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: 1rem; }
+.prw-item { padding: 1.1rem 0; border-bottom: 1px solid var(--prw-line); }
+.prw[data-layout="grid"] .prw-item { border: 1px solid var(--prw-line); border-radius: 6px; padding: 1rem; }
+.prw-meta { font-size: .88em; opacity: .75; margin: .15rem 0 .5rem; }
+.prw-badge { display: inline-block; font-size: .8em; border: 1px solid var(--prw-accent); color: var(--prw-accent); border-radius: 99px; padding: 0 .5rem; margin-left: .4rem; }
+.prw-body { margin: .4rem 0; white-space: pre-line; overflow-wrap: anywhere; }
+.prw-reply { margin: .6rem 0 0; padding: .6rem .8rem; border-left: 3px solid var(--prw-accent); background: color-mix(in srgb, currentColor 5%, transparent); font-size: .95em; white-space: pre-line; }
+.prw-photos { display: flex; flex-wrap: wrap; gap: .5rem; margin: .5rem 0; }
+.prw-photos img { width: 5.5rem; height: 5.5rem; object-fit: cover; border-radius: 4px; }
+.prw-form { margin: 1.25rem 0; padding: 1.25rem; border: 1px solid var(--prw-line); border-radius: 6px; }
+.prw-form label, .prw-form legend { display: block; font-weight: 600; margin: .9rem 0 .3rem; padding: 0; }
+.prw-form fieldset { border: 0; margin: 0; padding: 0; }
+.prw-rate { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
+.prw-rate input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.prw-rate label { font-size: 1.9rem; line-height: 1; margin: 0; cursor: pointer; color: var(--prw-line); font-weight: 400; padding: 0 .1rem; }
+.prw-rate input:checked ~ label, .prw-rate label:hover, .prw-rate label:hover ~ label { color: var(--prw-accent); }
+.prw-rate input:focus-visible + label { outline: 2px solid var(--prw-accent); border-radius: 3px; }
+.prw-err { color: #b3261e; font-size: .9em; margin: .25rem 0 0; }
+.prw-ok { padding: .8rem 1rem; border: 1px solid var(--prw-accent); border-radius: 4px; margin: 1rem 0; }
+.prw-hp { position: absolute; left: -9999px; height: 0; overflow: hidden; }
+.prw-q { padding: .7rem 0; border-bottom: 1px solid var(--prw-line); }
+.prw-mini { color: inherit; text-decoration: none; display: inline-flex; gap: .4rem; align-items: center; font-size: .95em; }
+.prw-mini[hidden] { display: none; }
+.prw-mini .prw-stars { color: #1f4b3f; }
+@media (max-width: 480px) { .prw-form { padding: 1rem; } }

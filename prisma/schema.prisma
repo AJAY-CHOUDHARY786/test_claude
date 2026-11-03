@@ -1,0 +1,381 @@
+// PostgreSQL schema. Every merchant-owned table carries shopId and cascades from Shop,
+// so deleting a Shop (shop/redact) removes all of that merchant's data.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ReviewStatus {
+  PENDING
+  PUBLISHED
+  REJECTED
+  HIDDEN
+}
+
+enum RequestStatus {
+  QUEUED
+  SENDING
+  SENT
+  FAILED
+  CANCELLED
+  SKIPPED
+  COMPLETED
+}
+
+enum QuestionStatus {
+  PENDING
+  PUBLISHED
+  HIDDEN
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  DONE
+  FAILED
+}
+
+enum ImportStatus {
+  PREVIEW
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+// Required by @shopify/shopify-app-session-storage-prisma. Keep field names as-is.
+model Session {
+  id                  String    @id
+  shop                String
+  state               String
+  isOnline            Boolean   @default(false)
+  scope               String?
+  expires             DateTime?
+  accessToken         String
+  userId              BigInt?
+  firstName           String?
+  lastName            String?
+  email               String?
+  accountOwner        Boolean   @default(false)
+  locale              String?
+  collaborator        Boolean?  @default(false)
+  emailVerified       Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+
+  @@index([shop])
+}
+
+model Shop {
+  id            String    @id @default(cuid())
+  domain        String    @unique
+  installedAt   DateTime  @default(now())
+  uninstalledAt DateTime?
+
+  settings       ShopSettings?
+  subscription   Subscription?
+  reviews        Review[]
+  reviewMedia    ReviewMedia[]
+  reviewReplies  ReviewReply[]
+  moderation     ModerationEvent[]
+  requests       ReviewRequest[]
+  templates      EmailTemplate[]
+  suppressions   Suppression[]
+  questions      Question[]
+  answers        Answer[]
+  importJobs     ImportJob[]
+  usage          UsageStat[]
+  audit          AuditLog[]
+  jobs           Job[]
+  productSettings ProductWidgetSetting[]
+}
+
+model ShopSettings {
+  id     String @id @default(cuid())
+  shopId String @unique
+  shop   Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  autoPublish         Boolean  @default(false)
+  requestsEnabled     Boolean  @default(false)
+  requestDelayDays    Int      @default(7)
+  maxProductsPerOrder Int      @default(3)
+  reminderEnabled     Boolean  @default(false)
+  reminderDelayDays   Int      @default(7)
+  excludedProductIds  String[]
+  emitStructuredData  Boolean  @default(false)
+  widgetAccentColor   String   @default("#1f4b3f")
+  widgetLayout        String   @default("list")
+  showVerifiedBadge   Boolean  @default(true)
+  reviewsPerPage      Int      @default(10)
+  allowPhotos         Boolean  @default(true)
+  senderName          String?
+  replyToEmail        String?
+  updatedAt           DateTime @updatedAt
+}
+
+model Subscription {
+  id                    String    @id @default(cuid())
+  shopId                String    @unique
+  shop                  Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopifySubscriptionId String?
+  plan                  String?
+  status                String    @default("NONE")
+  trialEndsAt           DateTime?
+  currentPeriodEnd      DateTime?
+  isTest                Boolean   @default(false)
+  updatedAt             DateTime  @updatedAt
+}
+
+model Review {
+  id               String       @id @default(cuid())
+  shopId           String
+  shop             Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopifyProductId String
+  rating           Int
+  title            String?
+  body             String
+  reviewerName     String
+  status           ReviewStatus @default(PENDING)
+  verifiedPurchase Boolean      @default(false)
+  source           String       @default("STOREFRONT")
+  externalKey      String?
+  requestId        String?      @unique
+  request          ReviewRequest? @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  publishedAt      DateTime?
+  deletedAt        DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  media   ReviewMedia[]
+  reply   ReviewReply?
+  events  ModerationEvent[]
+
+  @@unique([shopId, externalKey])
+  @@index([shopId, shopifyProductId, status, createdAt])
+  @@index([shopId, status, createdAt])
+  @@index([shopId, deletedAt])
+}
+
+model ReviewMedia {
+  id         String   @id @default(cuid())
+  shopId     String
+  shop       Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  reviewId   String
+  review     Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  storageKey String   @unique
+  mime       String
+  sizeBytes  Int
+  createdAt  DateTime @default(now())
+
+  @@index([reviewId])
+  @@index([shopId])
+}
+
+model ReviewReply {
+  id        String   @id @default(cuid())
+  shopId    String
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  reviewId  String   @unique
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ModerationEvent {
+  id         String        @id @default(cuid())
+  shopId     String
+  shop       Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  reviewId   String
+  review     Review        @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  action     String
+  fromStatus ReviewStatus?
+  toStatus   ReviewStatus?
+  actor      String
+  note       String?
+  createdAt  DateTime      @default(now())
+
+  @@index([reviewId, createdAt])
+  @@index([shopId, createdAt])
+}
+
+model ReviewRequest {
+  id                String        @id @default(cuid())
+  shopId            String
+  shop              Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  kind              String        @default("REQUEST")
+  shopifyOrderId    String
+  shopifyProductId  String
+  shopifyCustomerId String?
+  productTitle      String
+  recipientEmail    String?
+  recipientName     String?
+  status            RequestStatus @default(QUEUED)
+  sendAt            DateTime
+  attempts          Int           @default(0)
+  lastError         String?
+  providerMessageId String?
+  deliveryStatus    String?
+  deliveredAt       DateTime?
+  sentAt            DateTime?
+  cancelledAt       DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  review Review?
+
+  @@unique([shopId, shopifyOrderId, shopifyProductId, kind])
+  @@index([status, sendAt])
+  @@index([shopId, status])
+  @@index([shopId, shopifyCustomerId])
+  @@index([providerMessageId])
+}
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  shopId    String
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  kind      String
+  subject   String
+  body      String
+  updatedAt DateTime @updatedAt
+
+  @@unique([shopId, kind])
+}
+
+model Suppression {
+  id        String   @id @default(cuid())
+  shopId    String
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  emailHash String
+  reason    String
+  createdAt DateTime @default(now())
+
+  @@unique([shopId, emailHash])
+}
+
+model Question {
+  id               String         @id @default(cuid())
+  shopId           String
+  shop             Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopifyProductId String
+  body             String
+  askerName        String
+  status           QuestionStatus @default(PENDING)
+  createdAt        DateTime       @default(now())
+
+  answer Answer?
+
+  @@index([shopId, shopifyProductId, status])
+  @@index([shopId, status, createdAt])
+}
+
+model Answer {
+  id         String   @id @default(cuid())
+  shopId     String
+  shop       Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  questionId String   @unique
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  body       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ImportJob {
+  id          String       @id @default(cuid())
+  shopId      String
+  shop        Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  status      ImportStatus @default(PREVIEW)
+  totalRows   Int          @default(0)
+  importedRows Int         @default(0)
+  skippedRows Int          @default(0)
+  errorCount  Int          @default(0)
+  errorReport Json?
+  rows        Json?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([shopId, createdAt])
+}
+
+model Job {
+  id        String    @id @default(cuid())
+  shopId    String?
+  shop      Shop?     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  type      String
+  payload   Json
+  status    JobStatus @default(QUEUED)
+  runAt     DateTime  @default(now())
+  attempts  Int       @default(0)
+  lockedAt  DateTime?
+  lastError String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([status, runAt])
+}
+
+model WebhookEvent {
+  id          String    @id
+  shopDomain  String
+  topic       String
+  receivedAt  DateTime  @default(now())
+  processedAt DateTime?
+
+  @@index([receivedAt])
+}
+
+model UsageStat {
+  id             String   @id @default(cuid())
+  shopId         String
+  shop           Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  day            DateTime @db.Date
+  reviewsCreated Int      @default(0)
+  requestsSent   Int      @default(0)
+  photosStored   Int      @default(0)
+
+  @@unique([shopId, day])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  shopId    String
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  actor     String
+  action    String
+  target    String?
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([shopId, createdAt])
+}
+
+// Record of privacy webhook handling. Holds no personal data, so it survives shop deletion.
+model PrivacyEvent {
+  id          String    @id @default(cuid())
+  shopDomain  String
+  kind        String
+  detail      String?
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([shopDomain, createdAt])
+}
+
+// Optional per-product overrides of the storefront widget (Advanced plan).
+model ProductWidgetSetting {
+  id               String   @id @default(cuid())
+  shopId           String
+  shop             Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopifyProductId String
+  hidden           Boolean  @default(false)
+  layout           String?
+  accentColor      String?
+  updatedAt        DateTime @updatedAt
+
+  @@unique([shopId, shopifyProductId])
+}

@@ -1,0 +1,11 @@
+{ "reviews": {
+  "heading": "Avis des clients", "noscript": "Les avis nécessitent JavaScript pour s’afficher.", "loading": "Chargement des avis…",
+  "none": "Aucun avis pour le moment. Soyez le premier à en écrire un.", "based_on": "Basé sur {count} avis", "based_on_one": "Basé sur 1 avis",
+  "out_of": "sur 5", "verified": "Achat vérifié", "store_reply": "Réponse de la boutique", "write": "Écrire un avis", "cancel": "Annuler",
+  "sort": "Trier par", "newest": "Plus récents", "highest": "Mieux notés", "lowest": "Moins bien notés", "all_ratings": "Toutes les notes",
+  "load_more": "Afficher plus d’avis", "your_rating": "Votre note", "headline": "Titre (facultatif)", "your_review": "Votre avis", "your_name": "Nom à afficher",
+  "photos": "Ajouter des photos (facultatif, jusqu’à 5)", "submit": "Envoyer l’avis", "sending": "Envoi…",
+  "thanks_pending": "Merci. Votre avis apparaîtra une fois approuvé par la boutique.", "thanks_published": "Merci. Votre avis est maintenant publié.",
+  "error_generic": "Une erreur s’est produite. Veuillez réessayer.", "error_rate": "Vous avez envoyé plusieurs avis récemment. Veuillez réessayer plus tard.",
+  "photo_failed": "Votre avis a été enregistré, mais une photo n’a pas pu être envoyée.", "questions": "Questions et réponses", "ask": "Poser une question",
+  "your_question": "Votre question", "thanks_question": "Merci. La boutique répondra et publiera votre question ici.", "stars": "{n} sur 5 étoiles" } }
