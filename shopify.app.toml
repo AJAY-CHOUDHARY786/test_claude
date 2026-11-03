@@ -4,9 +4,6 @@ name = "Product Reviews"
 application_url = "https://testclaude-e4k2.vercel.app"
 embedded = true
 
-[build]
-include_config_on_deploy = true
-
 [webhooks]
 api_version = "2026-07"
 
